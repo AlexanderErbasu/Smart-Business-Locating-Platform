@@ -1,0 +1,250 @@
+﻿@{
+    ViewBag.Title = "Data Analysis";
+}
+
+<select id="mapOptions" onchange="changeMap()">
+    <option selected="selected" value="{Population_2015}">Population</option>
+    <option value="{Children_aged_0_15_2015}">No. of Children (Age 0-15)</option>
+    <option value="{Working_age_16_64_2015}">No. of Adults (Age 16-64) </option>
+    <option value="{Older_people_aged_65__2015}">People Older than 65 </option>
+    <option value="{Median_Age_2013}">Average Age </option>
+    <option value="{Population_density_persons_per_}">Population Density </option>
+    <option value="{PC_Not_Born_in_UK_2011}">% Not Born in the UK </option>
+    <option value="{PC_English_is_First_Language_of}">% with English as the SECOND Language </option>
+    <option value="{General_Fertility_Rate_2013}"> Fertility Rate </option>
+    <option value="{Employment_rate_16_64_2011}">Emplyment Rate </option>
+    <option value="{Number_of_jobs_in_area_2013}">Number of Jobs </option>
+    <option value="{Median_House_Price_GBP_2014}">Average House Price (£) </option>
+    <option value="{Number_of_properties_sold_2014}">No. Properties Sold </option>
+    <option value="{Median_Household_income_estimat}">Average Household Income </option>
+    <option value="{Crime_rate_2014_15}">Crime Rate </option>
+    <option value="{Deliberate_Fires_per_1000_popul}">Deliberate Fires (/1000 ppl) </option>
+    <option value="{Cars_per_household_2011}">Cars per Household </option>
+    <option value="{Average_Public_Transport_Access}">Average Public Transport Access </option>
+
+</select>
+
+<script>
+    var parts = 6;
+
+    //COLORS FOR DISTINGUISHING ON MAP
+    const first = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: "#e6e6ff",
+        style: "solid",
+        outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+        }
+    };
+
+    const second = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: "#9999ff",
+        style: "solid",
+        outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+        }
+    };
+
+    const third = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: "#3333ff",
+        style: "solid",
+        outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+        }
+    };
+
+    const fourth = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: "#0000cc",
+        style: "solid",
+        outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+        }
+    };
+
+    const fifth = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: "#000066",
+        style: "solid",
+        outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+        }
+    };
+
+    //initial setup
+    var mapOption = "{Population_2015}";
+    setMap();
+    function changeMap() {
+        mapOption = document.getElementById("mapOptions").value;
+        setMap();
+    }
+
+    //changing
+    function setMap() {
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/widgets/Legend",
+            "esri/tasks/support/Query",
+            "esri/tasks/QueryTask"
+        ], function (Map, MapView, FeatureLayer, Legend, Query, QueryTask) {
+
+            var min = 900000;
+            var max = 0;
+
+            //QUERYING FOR FINDING THE MINIMUM AND MAXIMUM FOR OUR CHOSEN FEATURE
+            var chosenQueryFeature = mapOption.substring(1, mapOption.length - 1);
+            var query = new Query();
+            query.where = "1 = 1"
+            query.outFields = ["*"];
+
+            query.returnGeometry = true;
+
+            queryFunction();
+
+            //this should finish first!!!
+            async function queryFunction() {
+                // Define the query task
+                var queryTask = new QueryTask({
+                    url: "https://services6.arcgis.com/qnuLPzqZhawWzvJ1/arcgis/rest/services/London_Ward_Profiles/FeatureServer/0"
+                });
+
+                // Execute the query
+                await queryTask.execute(query)
+                    .then(function (result) {
+                        result.features.forEach(function (feature) {
+                            valueReturned = parseFloat(feature.attributes[chosenQueryFeature]);
+                            if (valueReturned > max)
+                                max = valueReturned;
+                            if (valueReturned < min)
+                                min = valueReturned;
+                        })
+                    })
+                    .otherwise(function (e) {
+                        //console.log(e);
+                    });
+
+                callAfter();
+            }
+
+            function callAfter() {
+                console.log(mapOption);
+                console.log(min);
+                console.log(max);
+                /*****************************************************************
+                 * Set each unique value directly in the renderer's constructor.
+                 * At least one field must be used (in this case the "COL_DEG" field).
+                 * The label property of each unique value will be used to indicate
+                 * the field value and symbol in the legend.
+                 *****************************************************************/
+                var splitRes = split(min, max, parts);
+
+                const renderer = {
+                    type: "class-breaks", // autocasts as new ClassBreaksRenderer()
+                    field: chosenQueryFeature,
+                    legendOptions: {
+                        title: chosenQueryFeature
+                    },
+                    defaultSymbol: {
+                        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+                        color: "black",
+                        style: "backward-diagonal",
+                        outline: {
+                            width: 0.5,
+                            color: [50, 50, 50, 0.6]
+                        }
+                    },
+                    defaultLabel: "no data",
+                    classBreakInfos: [
+                        {
+                            minValue: splitRes[0]-0.1,
+                            maxValue: splitRes[1],
+                            symbol: first,
+                            label: (splitRes[0]).toString() + "-" + splitRes[1].toString()
+                        },
+                        {
+                            minValue: splitRes[1],
+                            maxValue: splitRes[2],
+                            symbol: second,
+                            label: (splitRes[1]).toString() + "-" + splitRes[2].toString()
+                        },
+                        {
+                            minValue: splitRes[2],
+                            maxValue: splitRes[3],
+                            symbol: third,
+                            label: (splitRes[2]).toString() + "-" + splitRes[3].toString()
+                        },
+                        {
+                            minValue: splitRes[3],
+                            maxValue: splitRes[4],
+                            symbol: fourth,
+                            label: (splitRes[3]).toString() + "-" + splitRes[4].toString()
+                        },
+                        {
+                            minValue: splitRes[4],
+                            maxValue: splitRes[5]+0.1,
+                            symbol: fifth,
+                            label: (splitRes[4]).toString() + "-" + (splitRes[5]).toString()
+                        }
+                    ]
+                };
+
+                const londonLayer = new FeatureLayer({
+                    url:
+                        "https://services6.arcgis.com/qnuLPzqZhawWzvJ1/arcgis/rest/services/London_Ward_Profiles/FeatureServer/0",
+                    renderer: renderer,
+                    popupTemplate: {
+                        title: "{Ward_name}",
+                        content:
+                            mapOption.toString()
+                    }
+                });
+
+                const map = new Map({
+                    basemap: "topo",
+                    layers: [londonLayer]
+                });
+
+                const view = new MapView({
+                    container: "viewDiv",
+                    map: map,
+                    center: [-0.1300, 51.4774],
+                    zoom: 10
+                });
+
+                /******************************************************************
+                 *
+                 * Add layers to layerInfos on the legend
+                 *
+                 ******************************************************************/
+
+                const legend = new Legend({
+                    view: view
+                });
+
+                view.ui.add(legend, "bottom-left");
+            }
+            });
+    }
+
+    function split(left, right, parts) {
+        var result = [],
+            delta = (right - left) / (parts - 1);
+        while (left < right) {
+            result.push(left);
+            left += delta;
+        }
+        result.push(right);
+        return result;
+    }
+</script>
+
+<div id="viewDiv" style="width:1200px; height:600px;"></div>

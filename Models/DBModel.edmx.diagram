@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8ec71f0e7b7d4d4db95a116242a4ea3c" Name="Diagram1">
+        <EntityTypeShape EntityType="BPPDBModel.RentingSpace" Width="1.5" PointX="10" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BPPDBModel.User" Width="6.25" PointX="0.875" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BPPDBModel.Ward" Width="1.5" PointX="7.75" PointY="0.625" IsExpanded="true" />
+        <AssociationConnector Association="BPPDBModel.FK__RentingSp__WardI__4D94879B" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BPPDBModel.AnalyzedElement" Width="1.5" PointX="9.375" PointY="3.5" />
+        <EntityTypeShape EntityType="BPPDBModel.UsersAnalyzedElement" Width="1.5" PointX="2.5" PointY="3.25" />
+        <AssociationConnector Association="BPPDBModel.FK__UsersAnal__Analy__7E37BEF6" />
+        <AssociationConnector Association="BPPDBModel.FK__UsersAnal__Impor__7D439ABD" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

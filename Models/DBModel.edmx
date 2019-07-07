@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BPPDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AnalyzedElements">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="min" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="max" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="nameReadable" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RentingSpaces">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Price" Type="money" />
+          <Property Name="WardId" Type="int" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UsersAnalyzedElements">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="AnalyzedElementId" Type="int" Nullable="false" />
+          <Property Name="ChosenValue" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+          <Property Name="Importance" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Wards">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WardName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LocalWebsite" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK__RentingSp__WardI__4D94879B">
+          <End Role="Wards" Type="Self.Wards" Multiplicity="0..1" />
+          <End Role="RentingSpaces" Type="Self.RentingSpaces" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wards">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RentingSpaces">
+              <PropertyRef Name="WardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsersAnal__Analy__7E37BEF6">
+          <End Role="AnalyzedElements" Type="Self.AnalyzedElements" Multiplicity="1" />
+          <End Role="UsersAnalyzedElements" Type="Self.UsersAnalyzedElements" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnalyzedElements">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsersAnalyzedElements">
+              <PropertyRef Name="AnalyzedElementId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsersAnal__Impor__7D439ABD">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UsersAnalyzedElements" Type="Self.UsersAnalyzedElements" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsersAnalyzedElements">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BPPDBModelStoreContainer">
+          <EntitySet Name="AnalyzedElements" EntityType="Self.AnalyzedElements" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RentingSpaces" EntityType="Self.RentingSpaces" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsersAnalyzedElements" EntityType="Self.UsersAnalyzedElements" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Wards" EntityType="Self.Wards" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__RentingSp__WardI__4D94879B" Association="Self.FK__RentingSp__WardI__4D94879B">
+            <End Role="Wards" EntitySet="Wards" />
+            <End Role="RentingSpaces" EntitySet="RentingSpaces" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsersAnal__Analy__7E37BEF6" Association="Self.FK__UsersAnal__Analy__7E37BEF6">
+            <End Role="AnalyzedElements" EntitySet="AnalyzedElements" />
+            <End Role="UsersAnalyzedElements" EntitySet="UsersAnalyzedElements" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsersAnal__Impor__7D439ABD" Association="Self.FK__UsersAnal__Impor__7D439ABD">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UsersAnalyzedElements" EntitySet="UsersAnalyzedElements" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BPPDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="RentingSpace">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="WardId" Type="Int32" />
+          <NavigationProperty Name="Ward" Relationship="Self.FK__RentingSp__WardI__4D94879B" FromRole="RentingSpaces" ToRole="Wards" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmailAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UsersAnalyzedElements" Relationship="BPPDBModel.FK__UsersAnal__Impor__7D439ABD" FromRole="User" ToRole="UsersAnalyzedElement" />
+        </EntityType>
+        <EntityType Name="Ward">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LocalWebsite" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RentingSpaces" Relationship="Self.FK__RentingSp__WardI__4D94879B" FromRole="Wards" ToRole="RentingSpaces" />
+        </EntityType>
+        <Association Name="FK__RentingSp__WardI__4D94879B">
+          <End Role="Wards" Type="Self.Ward" Multiplicity="0..1" />
+          <End Role="RentingSpaces" Type="Self.RentingSpace" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wards">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RentingSpaces">
+              <PropertyRef Name="WardId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BPPDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="RentingSpaces" EntityType="Self.RentingSpace" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Wards" EntityType="Self.Ward" />
+          <AssociationSet Name="FK__RentingSp__WardI__4D94879B" Association="Self.FK__RentingSp__WardI__4D94879B">
+            <End Role="Wards" EntitySet="Wards" />
+            <End Role="RentingSpaces" EntitySet="RentingSpaces" />
+          </AssociationSet>
+          <EntitySet Name="AnalyzedElements" EntityType="BPPDBModel.AnalyzedElement" />
+          <EntitySet Name="UsersAnalyzedElements" EntityType="BPPDBModel.UsersAnalyzedElement" />
+          <AssociationSet Name="FK__UsersAnal__Analy__7E37BEF6" Association="BPPDBModel.FK__UsersAnal__Analy__7E37BEF6">
+            <End Role="AnalyzedElement" EntitySet="AnalyzedElements" />
+            <End Role="UsersAnalyzedElement" EntitySet="UsersAnalyzedElements" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsersAnal__Impor__7D439ABD" Association="BPPDBModel.FK__UsersAnal__Impor__7D439ABD">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UsersAnalyzedElement" EntitySet="UsersAnalyzedElements" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AnalyzedElement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="min" Type="Decimal" Nullable="false" Precision="18" Scale="5" />
+          <Property Name="max" Type="Decimal" Nullable="false" Precision="18" Scale="5" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UsersAnalyzedElements" Relationship="BPPDBModel.FK__UsersAnal__Analy__7E37BEF6" FromRole="AnalyzedElement" ToRole="UsersAnalyzedElement" />
+          <Property Name="nameReadable" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UsersAnalyzedElement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="AnalyzedElementId" Type="Int32" Nullable="false" />
+          <Property Name="ChosenValue" Type="Decimal" Nullable="false" Precision="18" Scale="5" />
+          <Property Name="Importance" Type="Decimal" Nullable="false" Precision="18" Scale="5" />
+          <NavigationProperty Name="AnalyzedElement" Relationship="BPPDBModel.FK__UsersAnal__Analy__7E37BEF6" FromRole="UsersAnalyzedElement" ToRole="AnalyzedElement" />
+          <NavigationProperty Name="User" Relationship="BPPDBModel.FK__UsersAnal__Impor__7D439ABD" FromRole="UsersAnalyzedElement" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__UsersAnal__Analy__7E37BEF6">
+          <End Type="BPPDBModel.AnalyzedElement" Role="AnalyzedElement" Multiplicity="1" />
+          <End Type="BPPDBModel.UsersAnalyzedElement" Role="UsersAnalyzedElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnalyzedElement">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsersAnalyzedElement">
+              <PropertyRef Name="AnalyzedElementId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsersAnal__Impor__7D439ABD">
+          <End Type="BPPDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="BPPDBModel.UsersAnalyzedElement" Role="UsersAnalyzedElement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsersAnalyzedElement">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BPPDBModelStoreContainer" CdmEntityContainer="BPPDBEntities">
+          <EntitySetMapping Name="RentingSpaces">
+            <EntityTypeMapping TypeName="BPPDBModel.RentingSpace">
+              <MappingFragment StoreEntitySet="RentingSpaces">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="WardId" ColumnName="WardId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BPPDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Wards">
+            <EntityTypeMapping TypeName="BPPDBModel.Ward">
+              <MappingFragment StoreEntitySet="Wards">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="WardName" ColumnName="WardName" />
+                <ScalarProperty Name="LocalWebsite" ColumnName="LocalWebsite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AnalyzedElements">
+            <EntityTypeMapping TypeName="BPPDBModel.AnalyzedElement">
+              <MappingFragment StoreEntitySet="AnalyzedElements">
+                <ScalarProperty Name="nameReadable" ColumnName="nameReadable" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="max" ColumnName="max" />
+                <ScalarProperty Name="min" ColumnName="min" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsersAnalyzedElements">
+            <EntityTypeMapping TypeName="BPPDBModel.UsersAnalyzedElement">
+              <MappingFragment StoreEntitySet="UsersAnalyzedElements">
+                <ScalarProperty Name="Importance" ColumnName="Importance" />
+                <ScalarProperty Name="ChosenValue" ColumnName="ChosenValue" />
+                <ScalarProperty Name="AnalyzedElementId" ColumnName="AnalyzedElementId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

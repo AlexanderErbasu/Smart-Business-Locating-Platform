@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BPPDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AnalyzedElements">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="min" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+    <Property Name="max" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="nameReadable" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RentingSpaces">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Address" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Price" Type="money" />
+    <Property Name="WardId" Type="int" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UsersAnalyzedElements">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="AnalyzedElementId" Type="int" Nullable="false" />
+    <Property Name="ChosenValue" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+    <Property Name="Importance" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Wards">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="WardName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="LocalWebsite" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <Association Name="FK__RentingSp__WardI__4D94879B">
+    <End Role="Wards" Type="Self.Wards" Multiplicity="0..1" />
+    <End Role="RentingSpaces" Type="Self.RentingSpaces" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Wards">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RentingSpaces">
+        <PropertyRef Name="WardId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UsersAnal__Analy__7E37BEF6">
+    <End Role="AnalyzedElements" Type="Self.AnalyzedElements" Multiplicity="1" />
+    <End Role="UsersAnalyzedElements" Type="Self.UsersAnalyzedElements" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AnalyzedElements">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersAnalyzedElements">
+        <PropertyRef Name="AnalyzedElementId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UsersAnal__Impor__7D439ABD">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="UsersAnalyzedElements" Type="Self.UsersAnalyzedElements" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersAnalyzedElements">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BPPDBModelStoreContainer">
+    <EntitySet Name="AnalyzedElements" EntityType="Self.AnalyzedElements" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RentingSpaces" EntityType="Self.RentingSpaces" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsersAnalyzedElements" EntityType="Self.UsersAnalyzedElements" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Wards" EntityType="Self.Wards" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__RentingSp__WardI__4D94879B" Association="Self.FK__RentingSp__WardI__4D94879B">
+      <End Role="Wards" EntitySet="Wards" />
+      <End Role="RentingSpaces" EntitySet="RentingSpaces" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UsersAnal__Analy__7E37BEF6" Association="Self.FK__UsersAnal__Analy__7E37BEF6">
+      <End Role="AnalyzedElements" EntitySet="AnalyzedElements" />
+      <End Role="UsersAnalyzedElements" EntitySet="UsersAnalyzedElements" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UsersAnal__Impor__7D439ABD" Association="Self.FK__UsersAnal__Impor__7D439ABD">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UsersAnalyzedElements" EntitySet="UsersAnalyzedElements" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

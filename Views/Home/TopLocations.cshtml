@@ -1,0 +1,166 @@
+﻿@model List<BPP_Final.Models.UsersAnalyzedElement>
+
+@{
+    ViewBag.Title = "TopLocations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>TopLocations</h2>
+@{
+    //decimal is the most precise!
+    decimal weightMultiplier = (Model.Sum(cl => cl.Importance)) / 10;
+
+
+    for (int i = 0; i < Model.Count; i++)
+    {
+        if (weightMultiplier == 0)
+        {
+            //TODO: Redirect to another page
+
+        }
+        Model[i].Importance /= weightMultiplier; //This will make all the importances equal with 10
+    }
+
+}
+
+<script>
+    var topWards = [];
+
+    require([
+        "esri/tasks/support/Query",
+        "esri/tasks/QueryTask"
+    ], function (Query, QueryTask) {
+        // Define query SQL expression
+        var query = new Query();
+        query.where = "1 = 1"
+        var list = [];
+
+        @foreach (var elem in Model)
+        {
+            <text>
+        list.push("@elem.AnalyzedElement.name");
+            </text>
+        }
+        list.push("Ward_name");
+        query.outFields = list;
+
+        query.returnGeometry = false;
+
+        createTheList();
+
+        async function createTheList() {
+            // Define the query task
+            var queryTask = new QueryTask({
+                url: "https://services6.arcgis.com/qnuLPzqZhawWzvJ1/arcgis/rest/services/London_Ward_Profiles/FeatureServer/0"
+            });
+
+            // Execute the query
+            await queryTask.execute(query)
+                .then(function (result) {
+                    result.features.forEach(function (feature) {
+                        var grades = [];
+                        var importances = [];
+
+                        var foundImportance = false;
+                    @foreach (var elem in Model)
+                    {
+                        if (elem.Importance != 0)
+                        {
+                            <text>
+
+                        foundImportance = true;
+                    @{
+                        string toBeAnalyzed = elem.AnalyzedElement.name;
+                    }
+                        var toBeAnalyzedJS = "@HttpUtility.JavaScriptStringEncode(toBeAnalyzed)";
+                        var valueReturned = parseFloat(feature.attributes[toBeAnalyzedJS]);
+                        var min = @elem.AnalyzedElement.min;
+                        var max = @elem.AnalyzedElement.max;
+
+                        var avg = ((max + min) / 2);
+                        var interval = (avg / 3);
+
+                        var valueChosen = @elem.ChosenValue;
+
+                        var maxPossible = valueReturned + interval;
+                        var minPossible = valueReturned - interval;
+
+                        var grade = 0;
+                        if (valueChosen < maxPossible && valueChosen > minPossible) { //if our chosen value is in the interval
+
+                            var ourSegment = Math.abs(valueChosen - valueReturned);
+                            var percentage = ourSegment / interval * 10;
+
+                            grade = 10 - percentage;
+
+
+                        }
+                        grades.push(grade);
+                        importances.push(@elem.Importance);
+                            </text>
+                            }
+
+                        }
+
+
+                        //media ponderata
+                        if (foundImportance == true) {
+                            var top = 0;
+                            var btm = 0;
+
+                            for (var i = 0; i < grades.length; i++) {
+                                top += grades[i] * importances[i];
+                                btm += importances[i];
+                            }
+
+                            var ward = [feature.attributes["Ward_name"], top / btm];
+                            topWards.push(ward);
+                            //console.log("I added the Ward" + feature.attributes["Ward_name"] + "with the grade" + top / btm);
+
+                        }
+
+                    })
+                })
+                .otherwise(function (e) {
+                    console.log(e);
+                });
+
+            showResults();
+        }
+        });
+
+    function showResults() {
+        //TODO: Compare
+
+        //topWards.sort(function (a, b) { return a[1] - b[1]; });
+        //topWards.sort((a, b) => a[1] > b[1]);
+
+        var top10Wards = [];
+
+            var body = document.body,
+                tbl = document.createElement('table');
+        tbl.style.width = '100';
+
+        for (var i = 0; i < 9; i++) {
+            var tr = tbl.insertRow();
+                var td = tr.insertCell();
+            td.appendChild(document.createTextNode("Ward: " + topWards[i][0]));
+
+            var td = tr.insertCell();
+            td.appendChild(document.createTextNode("Grade: " + topWards[i][1]));
+            console.log(topWards[i][1]);
+
+            //TODO: show top properties in that ward
+            @*for (var j = 0; j < 3; ji++) {
+                var td = tr.insertCell();
+                td.appendChild(document.createTextNode("Property to Rent: " + @Model.Where()));
+            }*@
+
+                //TODO: Phone Number from the Local Gov
+
+        }
+        body.appendChild(tbl);
+
+
+    }
+</script>

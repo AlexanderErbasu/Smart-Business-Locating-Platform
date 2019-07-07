@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BPPDBModelStoreContainer" CdmEntityContainer="BPPDBEntities">
+    <EntitySetMapping Name="RentingSpaces">
+      <EntityTypeMapping TypeName="BPPDBModel.RentingSpace">
+        <MappingFragment StoreEntitySet="RentingSpaces">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="WardId" ColumnName="WardId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="BPPDBModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Wards">
+      <EntityTypeMapping TypeName="BPPDBModel.Ward">
+        <MappingFragment StoreEntitySet="Wards">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="WardName" ColumnName="WardName" />
+          <ScalarProperty Name="LocalWebsite" ColumnName="LocalWebsite" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AnalyzedElements">
+      <EntityTypeMapping TypeName="BPPDBModel.AnalyzedElement">
+        <MappingFragment StoreEntitySet="AnalyzedElements">
+          <ScalarProperty Name="nameReadable" ColumnName="nameReadable" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="max" ColumnName="max" />
+          <ScalarProperty Name="min" ColumnName="min" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UsersAnalyzedElements">
+      <EntityTypeMapping TypeName="BPPDBModel.UsersAnalyzedElement">
+        <MappingFragment StoreEntitySet="UsersAnalyzedElements">
+          <ScalarProperty Name="Importance" ColumnName="Importance" />
+          <ScalarProperty Name="ChosenValue" ColumnName="ChosenValue" />
+          <ScalarProperty Name="AnalyzedElementId" ColumnName="AnalyzedElementId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

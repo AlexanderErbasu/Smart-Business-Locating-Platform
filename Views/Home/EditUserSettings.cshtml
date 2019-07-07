@@ -1,0 +1,19 @@
+﻿@model List<BPP_Final.Models.AnalyzedElement>
+@{
+    ViewBag.Title = "EditUserSettings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Business Settings</h2>
+
+<h3>Hello @User.Identity.Name!</h3>
+<h4>Which parameter would you like to change?</h4>
+<table>
+    @foreach (var elem in Model)
+    {
+        <tr>
+            <td>@elem.nameReadable &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> 
+            <td>@Html.ActionLink("Edit", "EditParameter", new { param = elem.Id })</td>
+        </tr>
+    }
+</table>
